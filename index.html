@@ -55,11 +55,11 @@
     footer{margin:3rem 0 2rem;color:var(--muted);text-align:center}
     .note{font-size:.9rem;color:var(--muted)}
 
-    /* Map styles */
+    
     #map{height:420px}
     .leaflet-container{border-radius:16px;border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow)}
 
-    /* print */
+    
     @media print{
       nav, .cta, header.hero::after{display:none !important}
       body{background:#fff;color:#000}
@@ -262,11 +262,11 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Icônes simples
+    
     const citronIcon = L.divIcon({className:'', html:'<div style="background:#ffd447;color:#140a2b;border-radius:10px;padding:.2rem .45rem;font-weight:800;border:1px solid #0002;box-shadow:0 3px 10px #0004">🍋 Citron</div>'});
     const violetteIcon = L.divIcon({className:'', html:'<div style="background:#b48cf3;color:#140a2b;border-radius:10px;padding:.2rem .45rem;font-weight:800;border:1px solid #0002;box-shadow:0 3px 10px #0004">🌸 Violettes</div>'});
 
-    // ----- Menton : points clés -----
+   
     const menton = L.marker([43.7747, 7.4977], {icon: citronIcon}).addTo(map)
       .bindPopup('<b>Menton — Fête du Citron</b><br>Jardins Biovès & Promenade du Soleil');
     const jardinsBioves = L.circleMarker([43.7748, 7.4981], {radius:6, color:'#ffd447'}).addTo(map)
@@ -274,7 +274,7 @@
     const palaisEurope = L.circleMarker([43.7761, 7.4973], {radius:6, color:'#ffd447'}).addTo(map)
       .bindPopup('<b>Palais de l\'Europe</b><br>Artisanat & Orchidées / Jardin d\'hiver');
 
-    // ----- Tourrettes‑sur‑Loup : points clés -----
+   
     const tourrettes = L.marker([43.7160, 7.0570], {icon: violetteIcon}).addTo(map)
       .bindPopup('<b>Tourrettes‑sur‑Loup — Fête des Violettes</b><br>Place de la Libération');
     const bastide = L.circleMarker([43.7186, 7.0538], {radius:6, color:'#b48cf3'}).addTo(map)
@@ -289,4 +289,5 @@
 </body>
 
 </html>
+
 
