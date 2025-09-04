@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fête du Citron & Fête des Violettes : Guide</title>
+  <meta name="description" content="Site simple et réactif avec carte, images et détails essentiels sur la Fête du Citron (Menton) et la Fête des Violettes (Tourrettes‑sur‑Loup)." />
+  <style>
+    :root{
+      --bg:#0f1220; --card:#14182a; --muted:#8ea0b5; --accent:#ffd447; --accent2:#b48cf3; --text:#e6edf6;
+      --radius:18px; --shadow:0 10px 25px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:radial-gradient(1200px 800px at 100% -10%,#1b1e33 0%,#0f1220 55%),var(--bg);color:var(--text)}
+    header.hero{position:relative;display:grid;min-height:60vh;align-content:center;justify-items:center;text-align:center;padding:4rem 1rem}
+    header.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(800px 500px at 20% 0%, rgba(255,212,71,.15), transparent 60%), radial-gradient(600px 400px at 80% 100%, rgba(180,140,243,.15), transparent 60%);pointer-events:none}
+    .brand{display:flex;gap:.75rem;align-items:center;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800;letter-spacing:.3px;font-size:clamp(1.2rem,2.2vw,1.6rem)}
+    nav{position:sticky;top:0;z-index:999;backdrop-filter:saturate(1.3) blur(8px);background:rgba(20,24,42,.55);border-bottom:1px solid rgba(255,255,255,.08)}
+    nav .wrap{display:flex;gap:1rem;align-items:center;justify-content:space-between;padding:.7rem 1rem;max-width:1100px;margin:auto}
+    nav a{color:var(--muted);text-decoration:none;padding:.55rem .8rem;border-radius:12px}
+    nav a:hover, nav a:focus{background:rgba(255,255,255,.06);color:var(--text)}
+    .cta{display:inline-block;margin-top:1rem;padding:.85rem 1rem;border-radius:14px;background:linear-gradient(90deg,var(--accent),#ff9f1c);color:#1d1300;font-weight:800;text-decoration:none}
+
+    .container{max-width:1100px;margin:auto;padding:2rem 1rem}
+    .grid{display:grid;gap:1.25rem}
+    @media(min-width:840px){.grid.cols-2{grid-template-columns:1fr 1fr}}
+
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden}
+    .card h2, .card h3{margin:.25rem 0 .5rem}
+    .pad{padding:1.25rem}
+    .badge{display:inline-flex;gap:.4rem;align-items:center;font-size:.8rem;color:#1a1200;background:var(--accent);border-radius:999px;padding:.2rem .6rem;margin-right:.4rem}
+    .badge.violet{background:var(--accent2);color:#140a2b}
+
+    .media{aspect-ratio:16/9;background:#090b14;position:relative}
+    .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .media figcaption{position:absolute;right:.6rem;bottom:.6rem;background:rgba(0,0,0,.5);color:#d9e1ec;padding:.25rem .5rem;border-radius:10px;font-size:.75rem}
+
+    .facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin:.8rem 0}
+    @media(min-width:640px){.facts{grid-template-columns:repeat(3,1fr)}}
+    .fact{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);padding:.7rem;border-radius:12px}
+    .fact b{display:block;font-size:.82rem;color:#fff}
+
+    .pill{display:inline-block;padding:.35rem .7rem;border:1px solid rgba(255,255,255,.12);border-radius:999px;margin:.15rem .15rem 0 0;color:var(--muted);font-size:.85rem}
+
+    details{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.8rem;margin:.7rem 0}
+    details>summary{cursor:pointer;font-weight:700;color:#f2f4fb}
+    details[open]{background:rgba(255,255,255,.06)}
+
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:.6rem;border-bottom:1px dashed rgba(255,255,255,.1);text-align:left;vertical-align:top}
+    .muted{color:var(--muted)}
+    .inline{display:inline-flex;gap:.45rem;flex-wrap:wrap}
+
+    footer{margin:3rem 0 2rem;color:var(--muted);text-align:center}
+    .note{font-size:.9rem;color:var(--muted)}
+
+    /* Map styles */
+    #map{height:420px}
+    .leaflet-container{border-radius:16px;border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow)}
+
+    /* print */
+    @media print{
+      nav, .cta, header.hero::after{display:none !important}
+      body{background:#fff;color:#000}
+      .card, details{break-inside:avoid}
+    }
+  </style>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+<body>
+  <nav>
+    <div class="wrap">
+      <div class="brand">🍋 Citron & 🌸 Violettes : Guide</div>
+      <div class="inline">
+        <a href="#citron">Fête du Citron</a>
+        <a href="#violettes">Fête des Violettes</a>
+        <a href="#carte">Carte</a>
+        <a href="#compare">Comparer</a>
+        <a href="#faqs">FAQs</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1 style="max-width:22ch;line-height:1.1;margin:0">Fête du Citron & Fête des Violettes</h1>
+    <p class="muted" style="max-width:60ch">Un mini‑site clair avec <em>tous les petits détails</em> sur deux fêtes emblématiques du sud de la France : <strong>le carnaval citronné de Menton</strong> et <strong>la fête printanière des violettes à Tourrettes‑sur‑Loup</strong>.</p>
+    <a class="cta" href="#carte">Voir la carte interactive ↓</a>
+  </header>
+
+  <main class="container">
+
+    <!-- CARTE INTERACTIVE -->
+    <section id="carte" class="card">
+      <div class="pad">
+        <h2>🗺️ Carte interactive : Lieux clés</h2>
+        <p class="muted">Zoomez/dézoomez et cliquez sur les marqueurs pour voir les points importants des deux festivals.</p>
+      </div>
+      <div id="map"></div>
+    </section>
+
+    <!-- FÊTE DU CITRON -->
+    <section id="citron" class="card">
+      <figure class="media">
+        <img src="https://i0.wp.com/unfilteredtravelling.com/wp-content/uploads/2019/05/20190216_212608-e1558540659401.jpg?resize=1200%2C746&ssl=1" alt="Sculpture d'agrumes à la Fête du Citron (Menton)" />
+        <figcaption>Fête du Citron, Menton (image d'exemple)</figcaption>
+      </figure>
+      <div class="pad">
+        <h2>🍋 Fête du Citron — Menton (Côte d’Azur)</h2>
+        <div class="inline" aria-label="labels">
+          <span class="badge">Hiver • mi‑févr. → début mars</span>
+          <span class="badge">Depuis 1934</span>
+          <span class="badge">Citron de Menton (IGP)</span>
+        </div>
+        <p><strong>Quoi & pourquoi :</strong> Un grand carnaval d’hiver célébrant l’héritage agrumicole de Menton. Issu des parades d’hiver de la Riviera (fin XIX<sup>e</sup> siècle) pour dynamiser la basse saison, officialisé en <b>1934</b> lorsque la ville met à l’honneur son citron réputé.</p>
+
+        <div class="facts">
+          <div class="fact"><b>Où</b>Centre‑ville de Menton -- <em>Jardins Biovès</em> (sculptures) & <em>Promenade du Soleil</em> (corsos)</div>
+          <div class="fact"><b>Quand</b>Mi‑février à début mars (dates exactes selon l’édition)</div>
+          <div class="fact"><b>Échelle</b>~100-140 tonnes d’agrumes utilisées pour les structures et chars</div>
+          <div class="fact"><b>Signature</b>Corsos des Fruits d’Or (dimanche) & corsos nocturnes (jeudi) avec feu d’artifice</div>
+          <div class="fact"><b>À côté</b>Salon de l’Artisanat & exposition Orchidées/Jardin d’hiver au <em>Palais de l’Europe</em></div>
+          <div class="fact"><b>Astuce</b>Arriver tôt les jours de corsos; réserver les gradins à l’avance</div>
+        </div>
+
+        <h3>Temps forts</h3>
+        <ul>
+          <li><strong>Jardins Biovès</strong> -- sculptures géantes en citrons/oranges (la nuit : <em>Jardins de Lumières</em>).</li>
+          <li><strong>Corsos des Fruits d’Or</strong> -- défilés du dimanche après‑midi avec chars agrumés, fanfares et danseurs.</li>
+          <li><strong>Corsos nocturnes</strong> -- parades en soirée (jeudi), finalisés par un feu d’artifice.</li>
+          <li><strong>Salon de l’Artisanat & Orchidées</strong> -- au <em>Palais de l’Europe</em>.</li>
+        </ul>
+
+        <h3>Symboles, costumes, gastronomie</h3>
+        <ul>
+          <li><strong>Symboles</strong> : citrons/oranges, soleil, laurier, style Belle‑Époque.</li>
+          <li><strong>Costumes</strong> : tenues thématiques des troupes (varient selon le thème annuel).</li>
+          <li><strong>Gastronomie</strong> : tarte au citron, marmelades, liqueurs, écorces confites; vente des fruits en fin de fête.</li>
+        </ul>
+
+        <details>
+          <summary>Billets & logistique</summary>
+          <p>Parades et nocturnes généralement payantes. Places <em>debout</em> ou <em>en tribune</em>; réductions pour enfants/étudiants. Fermetures de rues pendant les corsos : visez une arrivée avant 11h (dim.) et en fin d’après‑midi pour les nocturnes.</p>
+        </details>
+
+        <details>
+          <summary>Note historique</summary>
+          <p>Menton fut un important producteur européen. L’IGP « Citron de Menton » consacre la qualité du terroir; la plupart des fruits d’exposition sont sourcés ailleurs afin de réserver les citrons IGP à la dégustation et aux produits locaux.</p>
+        </details>
+
+        <h3>Mini‑glossaire (FR → EN)</h3>
+        <p class="inline">
+          <span class="pill">corso = parade</span>
+          <span class="pill">Jardins de Lumières = Gardens of Light</span>
+          <span class="pill">Palais de l’Europe = exhibition hall</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- FÊTE DES VIOLETTES -->
+    <section id="violettes" class="card">
+      <figure class="media">
+        <img src="https://fyooyzbm.filerobot.com/v7/protec/DATA_ART_10975284-uh5Ls6Ka.jpg?vh=091b7e&ci_seal=d296c10e5a" alt="Char fleuri à la Fête des Violettes (Tourrettes‑sur‑Loup)" />
+        <figcaption>Fête des Violettes, Tourrettes‑sur‑Loup (image d'exemple)</figcaption>
+      </figure>
+      <div class="pad">
+        <h2>🌸 Fête des Violettes — Tourrettes‑sur‑Loup (Provence)</h2>
+        <div class="inline" aria-label="labels">
+          <span class="badge violet">Début du printemps • 1er week‑end de mars</span>
+          <span class="badge violet">Depuis 1952</span>
+          <span class="badge violet">Violette « Victoria »</span>
+        </div>
+        <p><strong>Quoi & pourquoi :</strong> Fête de village marquant la <em>fin de la saison de la violette</em> et l’arrivée du printemps. Rend hommage aux horticulteurs et à la violette <b>Victoria</b>, cultivée depuis la fin du XIX<sup>e</sup> siècle pour la parfumerie et la confiserie.</p>
+
+        <div class="facts">
+          <div class="fact"><b>Où</b>Centre médiéval (Place de la Libération) & <em>Bastide aux Violettes</em> (musée/serre)</div>
+          <div class="fact"><b>Quand</b>1er week‑end de mars (la récolte va env. d’octobre à mars)</div>
+          <div class="fact"><b>Signature</b><em>Corso fleuri</em> et joyeuse <em>bataille de fleurs</em> sur la place</div>
+          <div class="fact"><b>À côté</b>Marché provençal, musique/danse, visites de la <em>Confiserie Florian</em> (fleurs confites)</div>
+          <div class="fact"><b>Astuce</b>Chaussures confortables & veste lavable -- on finit souvent couvert de pétales !</div>
+        </div>
+
+        <h3>Temps forts</h3>
+        <ul>
+          <li><strong>Marché provençal</strong> -- bouquets & produits à la violette (sirops, bonbons, liqueurs, savons).</li>
+          <li><strong>Corso fleuri</strong> -- chars décorés de violettes et de fleurs printanières.</li>
+          <li><strong>Bataille de fleurs</strong> -- lancer de fleurs convivial sur la place du village.</li>
+          <li><strong>Bastide aux Violettes</strong> -- culture en restanques, techniques de liage et cueillette.</li>
+        </ul>
+
+        <h3>Symboles, costumes, gastronomie</h3>
+        <ul>
+          <li><strong>Symboles</strong> : violettes, paniers en osier, textiles provençaux, rameaux d’olivier.</li>
+          <li><strong>Costumes</strong> : couronnes fleuries, tenue provençale, palettes pastels.</li>
+          <li><strong>Gastronomie</strong> : violettes cristallisées, sirop/limonade à la violette, macarons, glaces artisanales.</li>
+        </ul>
+
+        <details>
+          <summary>Note historique</summary>
+          <p>Lancée en <b>1952</b> pour valoriser l’horticulture locale, la fête s’appuie sur un savoir‑faire lié à Grasse (parfumerie) et à la confiserie florale (ex. Confiserie Florian, Pont‑du‑Loup).</p>
+        </details>
+
+        <h3>Mini‑glossaire (FR → EN)</h3>
+        <p class="inline">
+          <span class="pill">corso fleuri = floral parade</span>
+          <span class="pill">bataille de fleurs = flower battle</span>
+          <span class="pill">Bastide = manor/estate (musée ici)</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- COMPARAISON -->
+    <section id="compare" class="card">
+      <div class="pad">
+        <h2>Comparaison côte à côte</h2>
+        <table class="table">
+          <thead>
+            <tr><th>Aspect</th><th>Fête du Citron (Menton)</th><th>Fête des Violettes (Tourrettes‑sur‑Loup)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Saison</td><td>Hiver -- mi‑févr. → début mars</td><td>Début du printemps -- 1er week‑end de mars (fin de saison)</td></tr>
+            <tr><td>Origines</td><td>Parades d’hiver de la Riviera → officiel 1934; héritage citrus</td><td>1952; remerciement aux producteurs & fête de printemps</td></tr>
+            <tr><td>Lieu</td><td>Jardins Biovès; Promenade du Soleil; Palais de l’Europe</td><td>Centre médiéval; Place de la Libération; Bastide aux Violettes</td></tr>
+            <tr><td>Icônes</td><td>Citrons/oranges, soleil</td><td>Violettes, paniers, motifs provençaux</td></tr>
+            <tr><td>Événements</td><td>Corsos des Fruits d’Or; corsos nocturnes + feu d’artifice; Jardins de Lumières</td><td>Corso fleuri; bataille de fleurs; marché provençal</td></tr>
+            <tr><td>Gastronomie</td><td>Desserts au citron, marmelades, écorces confites</td><td>Violettes cristallisées, sirops, pâtisseries</td></tr>
+            <tr><td>Conseils</td><td>Réserver tribunes; arriver tôt les jours de corsos</td><td>Prévoir des pétales; visiter Bastide & Confiserie</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FAQs -->
+    <section id="faqs" class="card">
+      <div class="pad">
+        <h2>FAQs</h2>
+        <details>
+          <summary>Les dates sont‑elles fixes ?</summary>
+          <p>Non. Les fenêtres sont similaires (mi‑févr. → début mars pour Menton; 1er week‑end de mars pour Tourrettes‑sur‑Loup) mais vérifiez toujours le calendrier officiel.</p>
+        </details>
+        <details>
+          <summary>Adapté aux enfants ?</summary>
+          <p>Oui. Ambiance familiale. À Menton, les corsos nocturnes peuvent être bruyants/chargés — protection auditive utile pour les petits.</p>
+        </details>
+        
+      </div>
+    </section>
+
+    <p class="note">un projet étudiant.</p>
+  </main>
+
+
+  <!-- Leaflet JS & Map setup -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    // Initial view centered between Menton et Tourrettes‑sur‑Loup
+    const map = L.map('map').setView([43.60, 7.30], 10);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Icônes simples
+    const citronIcon = L.divIcon({className:'', html:'<div style="background:#ffd447;color:#140a2b;border-radius:10px;padding:.2rem .45rem;font-weight:800;border:1px solid #0002;box-shadow:0 3px 10px #0004">🍋 Citron</div>'});
+    const violetteIcon = L.divIcon({className:'', html:'<div style="background:#b48cf3;color:#140a2b;border-radius:10px;padding:.2rem .45rem;font-weight:800;border:1px solid #0002;box-shadow:0 3px 10px #0004">🌸 Violettes</div>'});
+
+    // ----- Menton : points clés -----
+    const menton = L.marker([43.7747, 7.4977], {icon: citronIcon}).addTo(map)
+      .bindPopup('<b>Menton — Fête du Citron</b><br>Jardins Biovès & Promenade du Soleil');
+    const jardinsBioves = L.circleMarker([43.7748, 7.4981], {radius:6, color:'#ffd447'}).addTo(map)
+      .bindPopup('<b>Jardins Biovès</b><br>Sculptures d\'agrumes & Jardins de Lumières');
+    const palaisEurope = L.circleMarker([43.7761, 7.4973], {radius:6, color:'#ffd447'}).addTo(map)
+      .bindPopup('<b>Palais de l\'Europe</b><br>Artisanat & Orchidées / Jardin d\'hiver');
+
+    // ----- Tourrettes‑sur‑Loup : points clés -----
+    const tourrettes = L.marker([43.7160, 7.0570], {icon: violetteIcon}).addTo(map)
+      .bindPopup('<b>Tourrettes‑sur‑Loup — Fête des Violettes</b><br>Place de la Libération');
+    const bastide = L.circleMarker([43.7186, 7.0538], {radius:6, color:'#b48cf3'}).addTo(map)
+      .bindPopup('<b>Bastide aux Violettes</b><br>Musée & serre (culture de la violette)');
+    const florian = L.circleMarker([43.7238, 7.0364], {radius:6, color:'#b48cf3'}).addTo(map)
+      .bindPopup('<b>Confiserie Florian (Pont‑du‑Loup)</b><br>Visites & fleurs cristallisées');
+
+    // Ajuster la vue pour englober tous les marqueurs
+    const group = L.featureGroup([menton, jardinsBioves, palaisEurope, tourrettes, bastide, florian]);
+    map.fitBounds(group.getBounds().pad(0.2));
+  </script>
+</body>
+</html>
